@@ -27,7 +27,6 @@ jobs:
         run: ./gradlew test
 
   dependency-scan:
-    needs: test
     name: Dependency Scan
     runs-on: ubuntu-latest
     container: openjdk:17-jdk-slim
@@ -41,12 +40,18 @@ jobs:
         uses: dependency-check/Dependency-Check_Action@main
         id: Depcheck
         with:
-          project: 'inspectit-ocelot-eum-server'
+          project: ${{ github.repository }}
           path: '.'
           format: 'HTML'
           out: 'reports'
+          args: >
+              --failBuildOnCVSS 6
+              --suppression dependencyCheckSuppression.xml
+              --disableAssembly
+              --nvdApiKey ${{ secrets.NVD_API_KEY }}
+              --nvdApiDelay 10000
       - name: Upload test results
         uses: actions/upload-artifact@v3
         with:
-          name: DependencyCheck-Report
+          name: dependency-check-report-eum-server
           path: ${{github.workspace}}/reports
