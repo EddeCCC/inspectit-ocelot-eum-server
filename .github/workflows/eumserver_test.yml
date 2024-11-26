@@ -45,7 +45,7 @@ jobs:
           format: 'HTML'
           out: 'reports'
           args: >
-              --failBuildOnCVSS 6
+              --failOnCVSS 6
               --suppression dependencyCheckSuppression.xml
               --disableAssembly
               --nvdApiKey ${{ secrets.NVD_API_KEY }}
